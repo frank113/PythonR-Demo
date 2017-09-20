@@ -1,0 +1,81 @@
+---
+title: "Francesca System2 Code Samples"
+author: "Frank Kovacs"
+date: "9/20/2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+First, we must define the **path** to the `.py` file. This is best defined as a local path with the location of the file calling the command as the starting point. For example, if this file is located in the same folder as a "Scripts" folder that contains the program I wish to run (in this case we will call it `make_cov.py`), the path would be defined as follows:
+
+```{r, warning=F, message=F}
+path_to_py <- "Scripts/make_cov.py"
+```
+
+This variable will later be passed to the `system2` command as a string. 
+
+The goal of the `system2` command is to mimic the command line. For example, say I have the following script written in `Scripts/print_names.py`:
+
+```{python, eval=F}
+import string
+
+names = ["Frank", "Alex", "Wenting", "Rebecca", "Genovese", "Francesca"]
+
+for person in names:
+  print("A person named %s in the array!" % person)
+
+print("We have finished the script!")
+```
+
+If we were to run the script from the command line interface, we would run the following command:
+
+```{bash}
+python Scripts/print_names.py
+```
+
+To run such a command from native R, we may make use of the `system2` command. To illustrate this example, consider the output from the following example:
+
+```{r}
+system2("python", args = c("Scripts/print_names.py"), stdout = TRUE)
+```
+
+Setting the `stdout = TRUE` flag simply captures the **printed** output into R. 
+
+For making .csv files to deal with large-scale calculations, it is easiest to compartmentalize the writing of .csv files within python and within R -- yet not in-between. This strategy means that the only communcation between the two langauges will be the path to a .csv file. 
+
+For example, say we wish to load the `data/college.csv` data into python after previously saving the .csv file using the `write.csv()` function. Prefacing the python file with the following code:
+
+```{python, eval=F}
+import sys
+
+args = sys.argv[1:]
+```
+
+Allows for each subsequence item in the `args = ` command in `system2` to be fed into the script. For example, if we wish to feed the `data/college.csv` file path into a python script located at `Scripts/open_ex_csv.py`, we would first call:
+
+```{r, eval=F}
+system2("python", 
+        args = c("Scripts/open_ex_csv.py", 
+                 "data/college.csv"), 
+        stdout = TRUE)
+```
+
+While in Python we may run the following script:
+
+```{python, eval=F}
+import sys
+import csv
+
+args = sys.argv[1:]
+
+## We know that args = ["data/colleges.csv"]
+
+with open(args[0], "w") as example:
+  reader_obj = csv.reader(example)
+  text = ""
+  for row in reader_obj:
+    text += row
+```
+
+This will produce a long string with the values from the .csv file. 

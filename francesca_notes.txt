@@ -1,0 +1,18 @@
+Francesca Notes:
+
+What she needs:
+
+AWS:
+	R
+	.RData
+	Matrix multiplication
+	Inversion --> takes forever
+	OVerwrites base object every time
+	We can outsource it to R
+Each time step in an iterative loop
+	Position at time t using [0, t-1]
+	p.p gets updated once at each T
+
+To-do:
+	Email her background from R for Developers about outsourcing to python
+	Small 200x5 .csv file
